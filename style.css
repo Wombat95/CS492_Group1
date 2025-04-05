@@ -1,0 +1,182 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #fff8f0;
+  color: #333;
+  padding: 0 20px;
+}
+
+header {
+  background-color: #d62828;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+nav ul {
+  list-style: none;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+main {
+  margin: 40px 0;
+}
+
+section {
+  margin-bottom: 40px;
+}
+
+.menu-item {
+  background: #f4f4f4;
+  padding: 15px;
+  margin: 10px 0;
+  border-left: 5px solid #d62828;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #d62828;
+  color: white;
+}
+
+#cart {
+  background-color: #fefae0;
+  padding: 20px;
+  border: 2px solid #d4a373;
+  margin-top: 40px;
+}
+
+button {
+  background-color: #d62828;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #a61c1c;
+}
+
+#cart button {
+  margin-top: 10px;
+}
+
+#cart ul li button {
+  margin-left: 10px;
+  padding: 4px 8px;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 0.8em;
+  cursor: pointer;
+}
+
+#cart ul li button:hover {
+  background-color: #333;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+form label, form select, fieldset {
+  display: block;
+  margin: 10px 0;
+}
+
+input[type="text"],
+input[type="month"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+#orders-section {
+  background-color: #fff8f0;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.order {
+  background: white;
+  margin: 15px 0;
+  padding: 15px;
+  border-left: 5px solid #d62828;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.05);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  padding: 0;
+  margin-top: 10px;
+}
+
+#menu h2 {
+  margin-top: 40px;
+  color: #d62828;
+}
+
+#menu .menu-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #fff8f0;
+  border-left: 5px solid #d62828;
+  border-radius: 8px;
+}
