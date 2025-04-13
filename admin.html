@@ -139,7 +139,12 @@
 
       const name = document.getElementById('item-name').value;
       const description = document.getElementById('item-desc').value;
-      const price = parseFloat(document.getElementById('item-price').value);
+      const price = {
+        Small: parseFloat(document.getElementById('price-small').value),
+        Medium: parseFloat(document.getElementById('price-medium').value),
+        Large: parseFloat(document.getElementById('price-large').value)
+      };
+
       const category = document.getElementById('item-category').value;
 
       const newItem = { name, description, price, category };
