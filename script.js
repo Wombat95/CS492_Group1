@@ -19,6 +19,17 @@ function openCustomizeModal(name) {
   updatePriceDisplay();
 }
 
+//Update Price Display
+function updatePriceDisplay() {
+  const size = document.getElementById('size').value;
+  const priceText = document.getElementById('dynamic-price');
+
+  if (currentPizza.price && currentPizza.price[size]) {
+    priceText.textContent = `Price: $${currentPizza.price[size].toFixed(2)}`;
+  } else {
+    priceText.textContent = '';
+  }
+}
 
 // Close modal
 function closeModal() {
