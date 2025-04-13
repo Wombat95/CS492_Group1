@@ -138,7 +138,7 @@
       div.innerHTML = `
         <h3>${item.name}</h3>
         <p>${item.description} — $${item.price.toFixed(2)}</p>
-        <button onclick="openCustomizeModal('${item.name}', ${item.price})">Order</button>
+        <button onclick="openCustomizeModal('${item.name}')">Order</button>
       `;
 
       if (item.category === 'Pizza') {
