@@ -114,11 +114,14 @@ function loadMenuItems() {
   menuItems.forEach((item, index) => {
     const li = document.createElement('li');
     li.innerHTML = `
-      <strong>${item.name}</strong> (${item.category}) - $${item.price.toFixed(2)}<br>
-      <em>${item.description}</em><br>
-      <button onclick="removeMenuItem(${index})">Remove</button>
-    `;
-    menuList.appendChild(li);
+  <strong>${item.name}</strong> (${item.category})<br>
+  Small: $${item.price.Small.toFixed(2)} |
+  Medium: $${item.price.Medium.toFixed(2)} |
+  Large: $${item.price.Large.toFixed(2)}<br>
+  <em>${item.description}</em><br>
+  <button onclick="removeMenuItem(${index})">Remove</button>
+`;
+
   });
 }
 
@@ -134,7 +137,11 @@ document.getElementById('menu-form').addEventListener('submit', function (e) {
 
   const name = document.getElementById('item-name').value;
   const description = document.getElementById('item-desc').value;
-  const price = parseFloat(document.getElementById('item-price').value);
+  const price = {
+  Small: parseFloat(document.getElementById('price-small').value),
+  Medium: parseFloat(document.getElementById('price-medium').value),
+  Large: parseFloat(document.getElementById('price-large').value)
+};
   const category = document.getElementById('item-category').value;
 
   const newItem = { name, description, price, category };
