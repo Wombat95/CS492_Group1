@@ -6,156 +6,45 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <script>
-    if (localStorage.getItem('isAdmin') !== 'true') {
-      window.location.href = 'login.html';
-    }
-  </script>
-
   <header>
     <h1>Admin Dashboard</h1>
     <nav>
       <ul>
         <li><a href="index.html">Back to Site</a></li>
-        <li><a href="#" onclick="logout()">Logout</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <section id="orders-section">
-      <h2>Orders</h2>
-      <div id="orders-container"></div>
-    </section>
-
     <section id="menu-management">
-  <h2>Manage Menu</h2>
-  <form id="menu-form">
-    <input type="text" id="item-name" placeholder="Item Name" required />
-    <input type="text" id="item-desc" placeholder="Description" required />
+      <h2>Manage Menu</h2>
+      <form id="menu-form">
+        <input type="text" id="item-name" placeholder="Item Name" required />
+        <input type="text" id="item-desc" placeholder="Description" required />
 
-    <label>Price (Small):</label>
-    <input type="number" id="price-small" step="0.01" required />
+        <label>Price (Small):</label>
+        <input type="number" id="price-small" step="0.01" required />
 
-    <label>Price (Medium):</label>
-    <input type="number" id="price-medium" step="0.01" required />
+        <label>Price (Medium):</label>
+        <input type="number" id="price-medium" step="0.01" required />
 
-    <label>Price (Large):</label>
-    <input type="number" id="price-large" step="0.01" required />
+        <label>Price (Large):</label>
+        <input type="number" id="price-large" step="0.01" required />
 
-    <label for="item-category">Category:</label>
-    <select id="item-category" required>
-      <option value="Pizza">Pizza</option>
-      <option value="Pasta">Pasta</option>
-    </select>
+        <label for="item-category">Category:</label>
+        <select id="item-category" required>
+          <option value="Pizza">Pizza</option>
+          <option value="Pasta">Pasta</option>
+        </select>
 
-    <button type="submit">Add Menu Item</button>
-  </form>
+        <button type="submit">Add Menu Item</button>
+      </form>
 
-  <h3>Current Menu Items</h3>
-  <ul id="menu-list"></ul>
-</section>
-
+      <h3>Current Menu Items</h3>
+      <ul id="menu-list"></ul>
+    </section>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Group 1's Pizzeria</p>
-  </footer>
-
-  <script>
-    function logout() {
-      localStorage.removeItem('isAdmin');
-      window.location.href = 'login.html';
-    }
-
-    function loadOrders() {
-  const orders = JSON.parse(localStorage.getItem('orders')) || [];
-  const container = document.getElementById('orders-container');
-  container.innerHTML = '';
-
-  if (orders.length === 0) {
-    container.innerHTML = '<p>No orders yet.</p>';
-    return;
-  }
-
-  orders.forEach((order, index) => {
-    const div = document.createElement('div');
-    div.className = 'order';
-    div.innerHTML = `
-      <p><strong>${order.customer}</strong> - ${order.timestamp}</p>
-      <ul>
-        ${order.items.map(item => `<li>${item.name} - $${item.price.toFixed(2)}</li>`).join('')}
-      </ul>
-      <p><strong>Total:</strong> $${order.total.toFixed(2)}</p>
-      <button onclick="cancelOrder(${index})">Cancel Order</button>
-    `;
-    container.appendChild(div);
-  });
-}
-
-   function cancelOrder(index) {
-     const orders = JSON.parse(localStorage.getItem('orders')) || [];
-     if (confirm(`Cancel the order for ${orders[index].customer}?`)) {
-       orders.splice(index, 1);
-       localStorage.setItem('orders', JSON.stringify(orders));
-       loadOrders(); // Refresh the display
-     }
-   }
-
-    loadOrders();
-
-// === MENU MANAGEMENT ===
-
-function loadMenuItems() {
-  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
-  const menuList = document.getElementById('menu-list');
-  menuList.innerHTML = '';
-
-  menuItems.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-  <strong>${item.name}</strong> (${item.category})<br>
-  Small: $${item.price.Small.toFixed(2)} |
-  Medium: $${item.price.Medium.toFixed(2)} |
-  Large: $${item.price.Large.toFixed(2)}<br>
-  <em>${item.description}</em><br>
-  <button onclick="removeMenuItem(${index})">Remove</button>
-`;
-
-  });
-}
-
-function removeMenuItem(index) {
-  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
-  menuItems.splice(index, 1);
-  localStorage.setItem('menuItems', JSON.stringify(menuItems));
-  loadMenuItems();
-}
-
-document.getElementById('menu-form').addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  const name = document.getElementById('item-name').value;
-  const description = document.getElementById('item-desc').value;
-  const price = {
-  Small: parseFloat(document.getElementById('price-small').value),
-  Medium: parseFloat(document.getElementById('price-medium').value),
-  Large: parseFloat(document.getElementById('price-large').value)
-};
-  const category = document.getElementById('item-category').value;
-
-  const newItem = { name, description, price, category };
-
-  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
-  menuItems.push(newItem);
-  localStorage.setItem('menuItems', JSON.stringify(menuItems));
-
-  this.reset();
-  loadMenuItems();
-});
-
-loadMenuItems();
-
-  </script>
+  <script src="admin.js"></script>
 </body>
 </html>
