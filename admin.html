@@ -29,33 +29,33 @@
     </section>
 
     <section id="menu-management">
-      <h2>Manage Menu</h2>
-      <form id="menu-form">
-  <input type="text" id="item-name" placeholder="Item Name" required />
-  <input type="text" id="item-desc" placeholder="Description" required />
+  <h2>Manage Menu</h2>
+  <form id="menu-form">
+    <input type="text" id="item-name" placeholder="Item Name" required />
+    <input type="text" id="item-desc" placeholder="Description" required />
 
-  <label>Price (Small):</label>
-  <input type="number" id="price-small" step="0.01" placeholder="e.g., 8.99" required />
-  
-  <label>Price (Medium):</label>
-  <input type="number" id="price-medium" step="0.01" placeholder="e.g., 10.99" required />
+    <label>Price (Small):</label>
+    <input type="number" id="price-small" step="0.01" required />
 
-  <label>Price (Large):</label>
-  <input type="number" id="price-large" step="0.01" placeholder="e.g., 12.99" required />
+    <label>Price (Medium):</label>
+    <input type="number" id="price-medium" step="0.01" required />
 
-  <label for="item-category">Category:</label>
-  <select id="item-category" required>
-    <option value="Pizza">Pizza</option>
-    <option value="Pasta">Pasta</option>
-  </select>
+    <label>Price (Large):</label>
+    <input type="number" id="price-large" step="0.01" required />
 
-  <button type="submit">Add Menu Item</button>
-</form>
+    <label for="item-category">Category:</label>
+    <select id="item-category" required>
+      <option value="Pizza">Pizza</option>
+      <option value="Pasta">Pasta</option>
+    </select>
 
+    <button type="submit">Add Menu Item</button>
+  </form>
 
-      <h3>Current Menu Items</h3>
-      <ul id="menu-list"></ul>
-    </section>
+  <h3>Current Menu Items</h3>
+  <ul id="menu-list"></ul>
+</section>
+
   </main>
 
   <footer>
