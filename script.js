@@ -2,11 +2,23 @@ let cart = [];
 let currentPizza = {};
 
 // Open customization modal
-function openCustomizeModal(name, basePrice) {
-  currentPizza = { name, basePrice };
-  document.getElementById('selected-pizza-name').value = name;
+function openCustomizeModal(name) {
+  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+  const item = menuItems.find(i => i.name === name);
+
+  if (!item) {
+    alert("Item not found.");
+    return;
+  }
+
+  currentPizza = item;
+  document.getElementById('selected-pizza-name').value = item.name;
+  document.getElementById('size').value = "Small"; // default
   document.getElementById('customize-modal').style.display = 'block';
+
+  updatePriceDisplay();
 }
+
 
 // Close modal
 function closeModal() {
