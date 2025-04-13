@@ -156,14 +156,24 @@ function removeMenuItem(index) {
 document.getElementById('menu-form').addEventListener('submit', function (e) {
   e.preventDefault();
 
-  const name = document.getElementById('item-name').value;
-  const description = document.getElementById('item-desc').value;
-  const category = document.getElementById('item-category').value;
+  const name = document.getElementById('item-name')?.value;
+  const description = document.getElementById('item-desc')?.value;
+  const category = document.getElementById('item-category')?.value;
+
+  const priceSmall = parseFloat(document.getElementById('price-small')?.value);
+  const priceMedium = parseFloat(document.getElementById('price-medium')?.value);
+  const priceLarge = parseFloat(document.getElementById('price-large')?.value);
+
+  // Guard clause if any value is missing or invalid
+  if (!name || !description || !category || isNaN(priceSmall) || isNaN(priceMedium) || isNaN(priceLarge)) {
+    alert("Please fill out all fields with valid values.");
+    return;
+  }
 
   const price = {
-    Small: parseFloat(document.getElementById('price-small').value),
-    Medium: parseFloat(document.getElementById('price-medium').value),
-    Large: parseFloat(document.getElementById('price-large').value),
+    Small: priceSmall,
+    Medium: priceMedium,
+    Large: priceLarge
   };
 
   const newItem = { name, description, price, category };
@@ -174,6 +184,8 @@ document.getElementById('menu-form').addEventListener('submit', function (e) {
 
   this.reset();
   loadMenuItems();
+});
+
 });
 
 loadMenuItems();
