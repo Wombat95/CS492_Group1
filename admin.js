@@ -2,11 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuForm = document.getElementById('menu-form');
   const menuList = document.getElementById('menu-list');
 
-  menuForm.addEventListener('submit', function (e) {
+  menuForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const name = document.getElementById('item-name').value;
-    const description = document.getElementById('item-desc').value;
+    const name = document.getElementById('item-name').value.trim();
+    const description = document.getElementById('item-desc').value.trim();
     const category = document.getElementById('item-category').value;
 
     const price = {
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     menuItems.push(newItem);
     localStorage.setItem('menuItems', JSON.stringify(menuItems));
 
-    this.reset();
+    menuForm.reset();
     loadMenuItems();
   });
 
@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
       li.innerHTML = `
         <strong>${item.name}</strong> (${item.category})<br>
         <em>${item.description}</em><br>
-        Small: $${item.price.Small.toFixed(2)} | 
-        Medium: $${item.price.Medium.toFixed(2)} | 
+        Small: $${item.price.Small.toFixed(2)} |
+        Medium: $${item.price.Medium.toFixed(2)} |
         Large: $${item.price.Large.toFixed(2)}<br>
         <button onclick="removeMenuItem(${index})">Remove</button>
       `;
@@ -48,12 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  window.removeMenuItem = function(index) {
+  // Make function globally accessible
+  window.removeMenuItem = (index) => {
     const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
     menuItems.splice(index, 1);
     localStorage.setItem('menuItems', JSON.stringify(menuItems));
     loadMenuItems();
-  }
+  };
 
   loadMenuItems();
 });
