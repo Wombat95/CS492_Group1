@@ -32,22 +32,22 @@
   <h2>Manage Menu</h2>
 
   <form id="menu-form">
-    <input type="text" id="item-name" placeholder="Item Name" required />
-    <input type="text" id="item-desc" placeholder="Description" required />
+  <input type="text" id="item-name" placeholder="Item Name" required />
+  <input type="text" id="item-desc" placeholder="Description" required />
 
-    <!-- THESE should be included if you're using price by size: -->
-    <input type="number" id="price-small" placeholder="Small Price" step="0.01" required />
-    <input type="number" id="price-medium" placeholder="Medium Price" step="0.01" required />
-    <input type="number" id="price-large" placeholder="Large Price" step="0.01" required />
+  <input type="number" id="price-small" placeholder="Small Price" step="0.01" required />
+  <input type="number" id="price-medium" placeholder="Medium Price" step="0.01" required />
+  <input type="number" id="price-large" placeholder="Large Price" step="0.01" required />
 
-    <label for="item-category">Category:</label>
-    <select id="item-category" required>
-      <option value="Pizza">Pizza</option>
-      <option value="Pasta">Pasta</option>
-    </select>
+  <label for="item-category">Category:</label>
+  <select id="item-category" required>
+    <option value="Pizza">Pizza</option>
+    <option value="Pasta">Pasta</option>
+  </select>
 
-    <button type="submit">Add Menu Item</button>
-  </form>
+  <button type="submit">Add Menu Item</button>
+</form>
+
 
   <h3>Current Menu Items</h3>
   <ul id="menu-list"></ul>
