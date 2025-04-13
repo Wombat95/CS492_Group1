@@ -1,61 +1,11 @@
 let cart = [];
 let currentPizza = {};
 
-function renderMenu() {
-  const container = document.getElementById('menu-items-container');
-  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
-
-  container.innerHTML = '';
-
-  if (menuItems.length === 0) {
-    container.innerHTML = '<p>No menu items available.</p>';
-    return;
-  }
-
-  const pizzaSection = document.createElement('div');
-  pizzaSection.innerHTML = '<h3>Pizza</h3>';
-
-  const pastaSection = document.createElement('div');
-  pastaSection.innerHTML = '<h3>Pasta</h3>';
-
-  menuItems.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'menu-item';
-    div.innerHTML = `
-      <h4>${item.name}</h4>
-      <p>${item.description}</p>
-      <button onclick="openCustomizeModal('${item.name}')">Order</button>
-    `;
-
-    if (item.category === 'Pizza') pizzaSection.appendChild(div);
-    else if (item.category === 'Pasta') pastaSection.appendChild(div);
-  });
-
-  container.appendChild(pizzaSection);
-  container.appendChild(pastaSection);
-}
-
-function openCustomizeModal(name) {
-  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
-  const item = menuItems.find(i => i.name === name);
-  if (!item) return alert("Item not found.");
-
-  currentPizza = item;
-  document.getElementById('selected-pizza-name').value = item.name;
-  document.getElementById('size').value = 'Small';
+// === CUSTOMIZATION MODAL ===
+function openCustomizeModal(name, basePrice) {
+  currentPizza = { name, basePrice };
+  document.getElementById('selected-pizza-name').value = name;
   document.getElementById('customize-modal').style.display = 'block';
-
-  updatePriceDisplay();
-}
-
-function updatePriceDisplay() {
-  const size = document.getElementById('size').value;
-  const priceText = document.getElementById('dynamic-price');
-  if (currentPizza.price && currentPizza.price[size]) {
-    priceText.textContent = `Price: $${currentPizza.price[size].toFixed(2)}`;
-  } else {
-    priceText.textContent = '';
-  }
 }
 
 function closeModal() {
@@ -64,22 +14,149 @@ function closeModal() {
 
 function submitCustomOrder(event) {
   event.preventDefault();
+
   const size = document.getElementById('size').value;
   const crust = document.getElementById('crust').value;
-  const toppings = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(el => el.value);
+  const toppings = Array.from(
+    document.querySelectorAll('input[type="checkbox"]:checked')
+  ).map(el => el.value);
 
-  const basePrice = currentPizza.price[size];
   const toppingCost = toppings.length * 1.0;
-  const totalPrice = basePrice + toppingCost;
+  const totalPrice = currentPizza.basePrice + toppingCost;
 
   const item = {
     name: `${currentPizza.name} (${size}, ${crust}, Toppings: ${toppings.join(', ') || 'None'})`,
-    price: totalPrice
+    price: totalPrice,
   };
 
   cart.push(item);
-  alert(`${item.name} added to cart for $${totalPrice.toFixed(2)}`);
+  updateCartDisplay();
   closeModal();
 }
 
-document.addEventListener('DOMContentLoaded', renderMenu);
+// === CART MANAGEMENT ===
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  updateCartDisplay();
+}
+
+function clearCart() {
+  cart = [];
+  updateCartDisplay();
+}
+
+function updateCartDisplay() {
+  const cartItemsEl = document.getElementById('cart-items');
+  const cartTotalEl = document.getElementById('cart-total');
+
+  cartItemsEl.innerHTML = '';
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      ${item.name} - $${item.price.toFixed(2)}
+      <button onclick="removeFromCart(${index})">Remove</button>
+    `;
+    cartItemsEl.appendChild(li);
+    total += item.price;
+  });
+
+  cartTotalEl.textContent = total.toFixed(2);
+}
+
+// === CHECKOUT MODAL ===
+function openCheckoutModal() {
+  if (cart.length === 0) {
+    alert("Your cart is empty!");
+    return;
+  }
+  document.getElementById('checkout-modal').style.display = 'block';
+}
+
+function closeCheckoutModal() {
+  document.getElementById('checkout-modal').style.display = 'none';
+}
+
+function submitOrder(event) {
+  event.preventDefault();
+
+  const name = document.getElementById('name').value.trim();
+  const card = document.getElementById('card').value.trim();
+
+  const orderData = {
+    customer: name,
+    items: cart,
+    total: cart.reduce((acc, item) => acc + item.price, 0),
+    timestamp: new Date().toLocaleString()
+  };
+
+  const orders = JSON.parse(localStorage.getItem('orders')) || [];
+  orders.push(orderData);
+  localStorage.setItem('orders', JSON.stringify(orders));
+
+  alert(`Thank you, ${name}! Your order has been placed.`);
+
+  cart = [];
+  updateCartDisplay();
+  closeCheckoutModal();
+  document.getElementById('checkout-form').reset();
+}
+
+// === MENU MANAGEMENT (Admin) ===
+function loadMenuItems() {
+  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+  const menuList = document.getElementById('menu-list');
+  if (!menuList) return; // If this is not the admin page
+
+  menuList.innerHTML = '';
+
+  menuItems.forEach((item, index) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <strong>${item.name}</strong> - $${item.price.toFixed(2)}<br>
+      <em>${item.description}</em>
+      <button onclick="removeMenuItem(${index})">Remove</button>
+    `;
+    menuList.appendChild(li);
+  });
+}
+
+function removeMenuItem(index) {
+  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+  menuItems.splice(index, 1);
+  localStorage.setItem('menuItems', JSON.stringify(menuItems));
+  loadMenuItems();
+}
+
+// === ADD NEW MENU ITEM (Admin) ===
+const menuForm = document.getElementById('menu-form');
+if (menuForm) {
+  menuForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('item-name').value.trim();
+    const desc = document.getElementById('item-desc').value.trim();
+    const price = parseFloat(document.getElementById('item-price').value);
+
+    const newItem = { name, description: desc, price };
+
+    const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+    menuItems.push(newItem);
+    localStorage.setItem('menuItems', JSON.stringify(menuItems));
+
+    this.reset();
+    loadMenuItems();
+  });
+}
+
+// === SETUP EVENT LISTENERS ===
+document.addEventListener('DOMContentLoaded', () => {
+  const clearCartBtn = document.getElementById('clear-cart-btn');
+  const checkoutBtn = document.getElementById('checkout-btn');
+
+  if (clearCartBtn) clearCartBtn.addEventListener('click', clearCart);
+  if (checkoutBtn) checkoutBtn.addEventListener('click', openCheckoutModal);
+
+  loadMenuItems();
+});
