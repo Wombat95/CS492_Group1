@@ -131,3 +131,50 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('checkout-btn').addEventListener('click', openCheckoutModal);
 });
 
+function renderMenu() {
+  const container = document.getElementById('menu-items-container');
+  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+
+  container.innerHTML = '';
+
+  if (menuItems.length === 0) {
+    container.innerHTML = '<p>No menu items available.</p>';
+    return;
+  }
+
+  // Separate sections for Pizza and Pasta
+  const pizzas = menuItems.filter(item => item.category === 'Pizza');
+  const pastas = menuItems.filter(item => item.category === 'Pasta');
+
+  if (pizzas.length > 0) {
+    const pizzaSection = document.createElement('div');
+    pizzaSection.innerHTML = '<h2>Pizza</h2>';
+    pizzas.forEach(item => {
+      pizzaSection.innerHTML += `
+        <div class="menu-item">
+          <h3>${item.name}</h3>
+          <p>${item.description}</p>
+          <button onclick="openCustomizeModal('${item.name}')">Order</button>
+        </div>
+      `;
+    });
+    container.appendChild(pizzaSection);
+  }
+
+  if (pastas.length > 0) {
+    const pastaSection = document.createElement('div');
+    pastaSection.innerHTML = '<h2>Pasta</h2>';
+    pastas.forEach(item => {
+      pastaSection.innerHTML += `
+        <div class="menu-item">
+          <h3>${item.name}</h3>
+          <p>${item.description}</p>
+          <button onclick="openCustomizeModal('${item.name}')">Order</button>
+        </div>
+      `;
+    });
+    container.appendChild(pastaSection);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', renderMenu);
