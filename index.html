@@ -49,11 +49,13 @@
       <input type="hidden" id="selected-pizza-name" />
 
       <label for="size">Size:</label>
-      <select id="size">
-        <option>Small</option>
-        <option>Medium</option>
-        <option>Large</option>
-      </select>
+        <select id="size" onchange="updatePriceDisplay()">
+          <option>Small</option>
+          <option>Medium</option>
+          <option>Large</option>
+        </select>
+        <p id="dynamic-price">Price: $0.00</p>
+
 
       <label for="crust">Crust:</label>
       <select id="crust">
