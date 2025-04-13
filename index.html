@@ -2,21 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pizzeria Menu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Group 1's Pizzeria</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
     <h1>Group 1's Pizzeria</h1>
+    <nav>
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
   </header>
 
   <main>
     <section id="menu">
-      <h2>Menu</h2>
-      <div id="menu-items-container"></div>
+      <h2>Pizza</h2>
+      <div id="pizza-items"></div>
+
+      <h2>Pasta</h2>
+      <div id="pasta-items"></div>
     </section>
 
-    <!-- Customize Modal -->
+    <section id="cart">
+      <h2>Your Cart</h2>
+      <ul id="cart-items"></ul>
+      <p><strong>Total:</strong> $<span id="cart-total">0.00</span></p>
+      <button id="clear-cart-btn">Clear Cart</button>
+      <button id="checkout-btn">Checkout</button>
+    </section>
+
+    <!-- Modal for Pizza Customization -->
     <div id="customize-modal" class="modal">
       <div class="modal-content">
         <span class="close-button" onclick="closeModal()">&times;</span>
@@ -25,12 +44,11 @@
           <input type="hidden" id="selected-pizza-name" />
 
           <label for="size">Size:</label>
-          <select id="size" onchange="updatePriceDisplay()">
+          <select id="size">
             <option>Small</option>
             <option>Medium</option>
             <option>Large</option>
           </select>
-          <p id="dynamic-price"></p>
 
           <label for="crust">Crust:</label>
           <select id="crust">
@@ -52,8 +70,88 @@
         </form>
       </div>
     </div>
+
+    <!-- Payment Modal -->
+    <div id="checkout-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeCheckoutModal()">&times;</span>
+        <h2>Checkout</h2>
+        <form id="checkout-form" onsubmit="submitOrder(event)">
+          <label for="name">Full Name:</label>
+          <input type="text" id="name" required />
+
+          <label for="card">Card Number:</label>
+          <input type="text" id="card" required pattern="\d{16}" placeholder="1234567812345678" />
+
+          <label for="expiration">Expiration Date:</label>
+          <input type="month" id="expiration" required />
+
+          <label for="cvv">CVV:</label>
+          <input type="text" id="cvv" required pattern="\d{3}" placeholder="123" />
+
+          <button type="submit">Place Order</button>
+        </form>
+      </div>
+    </div>
+
+    <section id="about">
+      <h2>About Us</h2>
+      <p>At Group 1's Pizzeria, we bring the taste of Italy to your neighborhood. Group 1 owned since 2025!</p>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>123 Pizza Lane, Flavor Town</p>
+      <p>Call us: (555) 123-4567</p>
+    </section>
   </main>
 
+  <footer>
+    <p>&copy; 2025 Group 1's Pizzeria</p>
+    <p style="font-size: 0.8em;"><a href="admin.html">Admin</a></p>
+    <!-- Tip: Protect this link with auth logic later -->
+  </footer>
+
   <script src="script.js"></script>
+  <script>
+    function renderMenu() {
+      const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+
+      const pizzaContainer = document.getElementById('pizza-items');
+      const pastaContainer = document.getElementById('pasta-items');
+
+      pizzaContainer.innerHTML = '';
+      pastaContainer.innerHTML = '';
+
+      if (menuItems.length === 0) {
+        pizzaContainer.innerHTML = '<p>No pizza items available.</p>';
+        pastaContainer.innerHTML = '<p>No pasta items available.</p>';
+        return;
+      }
+
+      menuItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'menu-item';
+
+        const priceString = item.price?.Small
+          ? `Small: $${item.price.Small.toFixed(2)}, Medium: $${item.price.Medium.toFixed(2)}, Large: $${item.price.Large.toFixed(2)}`
+          : `$${parseFloat(item.price).toFixed(2)}`;
+
+        div.innerHTML = `
+          <h3>${item.name}</h3>
+          <p>${item.description} — ${priceString}</p>
+          <button onclick="openCustomizeModal('${item.name}', ${item.price?.Small ?? item.price})">Order</button>
+        `;
+
+        if (item.category === 'Pizza') {
+          pizzaContainer.appendChild(div);
+        } else if (item.category === 'Pasta') {
+          pastaContainer.appendChild(div);
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', renderMenu);
+  </script>
 </body>
 </html>
