@@ -104,31 +104,32 @@
 
     // Load and render menu items
     function loadMenuItems() {
-  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
-  const menuList = document.getElementById('menu-list');
-  menuList.innerHTML = '';
+      const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+      const menuList = document.getElementById('menu-list');
+      menuList.innerHTML = '';
 
-  if (menuItems.length === 0) {
-    menuList.innerHTML = '<li>No items yet.</li>';
-    return;
-  }
+      if (menuItems.length === 0) {
+        menuList.innerHTML = '<li>No items yet.</li>';
+        return;
+      }
 
-  menuItems.forEach((item, index) => {
-    const li = document.createElement('li');
+      menuItems.forEach((item, index) => {
+        const li = document.createElement('li');
 
-    const priceDisplay = item.price?.Small
-      ? `Small: $${item.price.Small.toFixed(2)}, Medium: $${item.price.Medium.toFixed(2)}, Large: $${item.price.Large.toFixed(2)}`
-      : `$${parseFloat(item.price).toFixed(2)}`;
+        const priceDisplay = item.price?.Small !== undefined
+          ? `Small: $${item.price.Small.toFixed(2)}, Medium: $${item.price.Medium.toFixed(2)}, Large: $${item.price.Large.toFixed(2)}`
+          : `$${parseFloat(item.price).toFixed(2)}`;
 
-    li.innerHTML = `
-      <strong>${item.name}</strong> (${item.category})<br>
-      <em>${item.description}</em><br>
-      ${priceDisplay}<br>
-      <button onclick="removeMenuItem(${index})">Remove</button>
-    `;
-    menuList.appendChild(li);
-  });
-}
+        li.innerHTML = `
+          <strong>${item.name}</strong> (${item.category})<br>
+          <em>${item.description}</em><br>
+          ${priceDisplay}<br>
+          <button onclick="removeMenuItem(${index})">Remove</button>
+        `;
+        menuList.appendChild(li);
+      });
+    }
+
 
     // Remove a specific menu item
     function removeMenuItem(index) {
