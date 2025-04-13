@@ -133,16 +133,21 @@ document.getElementById('menu-form').addEventListener('submit', function (e) {
   e.preventDefault();
 
   const name = document.getElementById('item-name').value;
-  const desc = document.getElementById('item-desc').value;
-  const price = parseFloat(document.getElementById('item-price').value);
+  const description = document.getElementById('item-desc').value;
+  const category = document.getElementById('item-category').value;
 
-  const newItem = { name, description: desc, price };
+  const price = {
+    Small: parseFloat(document.getElementById('price-small').value),
+    Medium: parseFloat(document.getElementById('price-medium').value),
+    Large: parseFloat(document.getElementById('price-large').value),
+  };
+
+  const newItem = { name, description, price, category };
 
   const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
   menuItems.push(newItem);
   localStorage.setItem('menuItems', JSON.stringify(menuItems));
 
-  // Reset form
   this.reset();
   loadMenuItems();
 });
