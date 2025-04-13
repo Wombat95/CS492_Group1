@@ -130,62 +130,61 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
   document.getElementById('checkout-btn').addEventListener('click', openCheckoutModal);
 });
-function loadMenuItems() {
-  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
-  const menuList = document.getElementById('menu-list');
-  menuList.innerHTML = '';
+<script>
+  function loadMenuItems() {
+    const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+    const menuList = document.getElementById('menu-list');
+    menuList.innerHTML = '';
 
-  menuItems.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <strong>${item.name}</strong> - $${item.price.toFixed(2)}<br>
-      <em>${item.description}</em>
-      <button onclick="removeMenuItem(${index})">Remove</button>
-    `;
-    menuList.appendChild(li);
-  });
-}
+    if (menuItems.length === 0) {
+      menuList.innerHTML = '<li>No items added yet.</li>';
+      return;
+    }
 
-function removeMenuItem(index) {
-  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
-  menuItems.splice(index, 1);
-  localStorage.setItem('menuItems', JSON.stringify(menuItems));
-  loadMenuItems();
-}
-
-document.getElementById('menu-form').addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  const name = document.getElementById('item-name')?.value;
-  const description = document.getElementById('item-desc')?.value;
-  const category = document.getElementById('item-category')?.value;
-
-  const priceSmall = parseFloat(document.getElementById('price-small')?.value);
-  const priceMedium = parseFloat(document.getElementById('price-medium')?.value);
-  const priceLarge = parseFloat(document.getElementById('price-large')?.value);
-
-  // Guard clause if any value is missing or invalid
-  if (!name || !description || !category || isNaN(priceSmall) || isNaN(priceMedium) || isNaN(priceLarge)) {
-    alert("Please fill out all fields with valid values.");
-    return;
+    menuItems.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <strong>${item.name}</strong> (${item.category})<br>
+        <em>${item.description}</em><br>
+        Small: $${item.price.Small.toFixed(2)} |
+        Medium: $${item.price.Medium.toFixed(2)} |
+        Large: $${item.price.Large.toFixed(2)}<br>
+        <button onclick="removeMenuItem(${index})">Remove</button>
+      `;
+      menuList.appendChild(li);
+    });
   }
 
-  const price = {
-    Small: priceSmall,
-    Medium: priceMedium,
-    Large: priceLarge
-  };
+  function removeMenuItem(index) {
+    const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+    menuItems.splice(index, 1);
+    localStorage.setItem('menuItems', JSON.stringify(menuItems));
+    loadMenuItems();
+  }
 
-  const newItem = { name, description, price, category };
+  document.getElementById('menu-form').addEventListener('submit', function (e) {
+    e.preventDefault();
 
-  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
-  menuItems.push(newItem);
-  localStorage.setItem('menuItems', JSON.stringify(menuItems));
+    const name = document.getElementById('item-name').value;
+    const description = document.getElementById('item-desc').value;
+    const category = document.getElementById('item-category').value;
 
-  this.reset();
+    const price = {
+      Small: parseFloat(document.getElementById('price-small').value),
+      Medium: parseFloat(document.getElementById('price-medium').value),
+      Large: parseFloat(document.getElementById('price-large').value)
+    };
+
+    const newItem = { name, description, price, category };
+
+    const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+    menuItems.push(newItem);
+    localStorage.setItem('menuItems', JSON.stringify(menuItems));
+
+    this.reset();
+    loadMenuItems();
+  });
+
   loadMenuItems();
-});
+</script>
 
-});
-
-loadMenuItems();
