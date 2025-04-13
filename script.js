@@ -46,12 +46,13 @@ function submitCustomOrder(event) {
     document.querySelectorAll('input[type="checkbox"]:checked')
   ).map(el => el.value);
 
+  const basePrice = currentPizza.price[size];
   const toppingCost = toppings.length * 1.0;
-  const totalPrice = currentPizza.basePrice + toppingCost;
+  const totalPrice = basePrice + toppingCost;
 
   const item = {
     name: `${currentPizza.name} (${size}, ${crust}, Toppings: ${toppings.join(', ') || 'None'})`,
-    price: totalPrice,
+    price: totalPrice
   };
 
   cart.push(item);
