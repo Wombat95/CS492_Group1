@@ -144,6 +144,7 @@
 
       const name = document.getElementById('item-name').value;
       const description = document.getElementById('item-desc').value;
+
       const price = {
         Small: parseFloat(document.getElementById('price-small').value),
         Medium: parseFloat(document.getElementById('price-medium').value),
@@ -160,6 +161,8 @@
 
       this.reset();
       loadMenuItems();
+    });
+
     });
 
     // Initial loads
