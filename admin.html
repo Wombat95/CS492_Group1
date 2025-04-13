@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css" />
+  <script>
+    // Redirect to login if not admin
+    if (localStorage.getItem('isAdmin') !== 'true') {
+      window.location.href = 'login.html';
+    }
+  </script>
 </head>
 <body>
   <header>
@@ -11,25 +17,24 @@
     <nav>
       <ul>
         <li><a href="index.html">Back to Site</a></li>
+        <li><a href="#" onclick="logout()">Logout</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
+    <section id="orders-section">
+      <h2>Orders</h2>
+      <div id="orders-container"></div>
+    </section>
+
     <section id="menu-management">
       <h2>Manage Menu</h2>
+
       <form id="menu-form">
         <input type="text" id="item-name" placeholder="Item Name" required />
         <input type="text" id="item-desc" placeholder="Description" required />
-
-        <label>Price (Small):</label>
-        <input type="number" id="price-small" step="0.01" required />
-
-        <label>Price (Medium):</label>
-        <input type="number" id="price-medium" step="0.01" required />
-
-        <label>Price (Large):</label>
-        <input type="number" id="price-large" step="0.01" required />
+        <input type="number" id="item-price" placeholder="Price" step="0.01" required />
 
         <label for="item-category">Category:</label>
         <select id="item-category" required>
@@ -45,6 +50,100 @@
     </section>
   </main>
 
-  <script src="admin.js"></script>
+  <footer>
+    <p>&copy; 2025 Group 1's Pizzeria</p>
+  </footer>
+
+  <script>
+    // Logout function
+    function logout() {
+      localStorage.removeItem('isAdmin');
+      window.location.href = 'login.html';
+    }
+
+    // Load and render orders
+    function loadOrders() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const container = document.getElementById('orders-container');
+      container.innerHTML = '';
+
+      if (orders.length === 0) {
+        container.innerHTML = '<p>No orders yet.</p>';
+        return;
+      }
+
+      orders.forEach((order, index) => {
+        const div = document.createElement('div');
+        div.className = 'order';
+        div.innerHTML = `
+          <p><strong>${order.customer}</strong> - ${order.timestamp}</p>
+          <ul>
+            ${order.items.map(item => `<li>${item.name} - $${item.price.toFixed(2)}</li>`).join('')}
+          </ul>
+          <p><strong>Total:</strong> $${order.total.toFixed(2)}</p>
+          <button onclick="cancelOrder(${index})">Cancel Order</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Cancel a specific order
+    function cancelOrder(index) {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      if (confirm(`Cancel the order for ${orders[index].customer}?`)) {
+        orders.splice(index, 1);
+        localStorage.setItem('orders', JSON.stringify(orders));
+        loadOrders(); // Refresh UI
+      }
+    }
+
+    // Load and render menu items
+    function loadMenuItems() {
+      const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+      const menuList = document.getElementById('menu-list');
+      menuList.innerHTML = '';
+
+      menuItems.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <strong>${item.name}</strong> (${item.category}) - $${item.price.toFixed(2)}<br>
+          <em>${item.description}</em><br>
+          <button onclick="removeMenuItem(${index})">Remove</button>
+        `;
+        menuList.appendChild(li);
+      });
+    }
+
+    // Remove a specific menu item
+    function removeMenuItem(index) {
+      const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+      menuItems.splice(index, 1);
+      localStorage.setItem('menuItems', JSON.stringify(menuItems));
+      loadMenuItems();
+    }
+
+    // Add new menu item
+    document.getElementById('menu-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('item-name').value;
+      const description = document.getElementById('item-desc').value;
+      const price = parseFloat(document.getElementById('item-price').value);
+      const category = document.getElementById('item-category').value;
+
+      const newItem = { name, description, price, category };
+
+      const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+      menuItems.push(newItem);
+      localStorage.setItem('menuItems', JSON.stringify(menuItems));
+
+      this.reset();
+      loadMenuItems();
+    });
+
+    // Initial loads
+    loadOrders();
+    loadMenuItems();
+  </script>
 </body>
 </html>
