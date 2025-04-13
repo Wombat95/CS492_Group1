@@ -140,28 +140,30 @@
     }
 
     // Add new menu item
+    document.addEventListener('DOMContentLoaded', () => {
+    // Attach form submission listener
     document.getElementById('menu-form').addEventListener('submit', function (e) {
-  e.preventDefault();
+      e.preventDefault();
 
-  const name = document.getElementById('item-name').value.trim();
-  const description = document.getElementById('item-desc').value.trim();
-  const category = document.getElementById('item-category').value;
+      const name = document.getElementById('item-name').value.trim();
+      const description = document.getElementById('item-desc').value.trim();
+      const category = document.getElementById('item-category').value;
 
-  const price = {
-    Small: parseFloat(document.getElementById('price-small').value),
-    Medium: parseFloat(document.getElementById('price-medium').value),
-    Large: parseFloat(document.getElementById('price-large').value)
-  };
+      const price = {
+        Small: parseFloat(document.getElementById('price-small').value),
+        Medium: parseFloat(document.getElementById('price-medium').value),
+        Large: parseFloat(document.getElementById('price-large').value)
+      };
 
-  const newItem = { name, description, price, category };
+      const newItem = { name, description, price, category };
 
-  const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
-  menuItems.push(newItem);
-  localStorage.setItem('menuItems', JSON.stringify(menuItems));
+      const menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+      menuItems.push(newItem);
+      localStorage.setItem('menuItems', JSON.stringify(menuItems));
 
-  this.reset();
-  loadMenuItems();
-});
+      this.reset();
+      loadMenuItems();
+    });
 
     });
 
